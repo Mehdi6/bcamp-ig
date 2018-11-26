@@ -1,0 +1,38 @@
+Plannification (bismi rahman/llah)
+
+#timeline todos#:
+Deadlines
+=========
+
+1) vendredi 23, Novembre
+	livrable: demo
+
+2) Vendredi 30, Novembre
+	livrable: raport + demo
+
+A) livrables (semaine du 14)
+	Lundi:
+	-tech choices (#DONE)
+	-functional specs/features + time estimation (#DONE)
+
+	Mardi, Mercredi, Jeudi (semaine 14)
+	-database schema (#DONE)
+	-schema rest api (#DONE)
+	-maquette/interface web platform/app (#PROGRESS)
+	-planning (#DONE)
+
+	-preparation: learning/finding express/node:JS tutos (#PROGRESS)
+
+	Vendredi:
+	-Installation and dev environment 
+		-Database (Mongodb+schema implementation)
+		-Backend (implementation of autentication service)
+		-Test Postman
+
+	-Global architecture (#PROGRESS)
+		Front/Back:End
+		- 
+		- 
+
+B) livrables (semaine du 21) (#TODO)
+	

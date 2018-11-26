@@ -1,0 +1,73 @@
+KIS'S (To improve technics of managing tasks)
+
+======================================================================
+TODOs:
+======================================================================
+
+softly-urgent *
+------ ------
+
+midium-urgent ***
+------ ------
+- 
+
+strongly-urgent *** ***
+-------- ------
+
+
+¨¨¨¨¨¨¨¨¨¨¨¨
+Unclassified
+¨¨¨¨¨¨¨¨¨¨¨¨
+
+General TODO
+------------
+
+
+======================================================================
+LOG TODOS/DONES	
+======================================================================
+15/11/2018
+
+## TODO:
+	- calquer: maquette (with wireframepro)
+	- architecture (b/end f/end)
+	- set up env | set up db
+
+13/11/18
+
+## TODO
+	- design web app (architechture)
+		eg: API(bend) + webapp singlepage(frontend) 1h
+		- Write API schema (with )
+			+ follow | POST
+			+ unfollow | POST
+			+ create account (form: fullname/ username/ age/ password/ etc ) | POST
+			+ authenticate (credentials: username/password) | POST
+			+ share a post | POST
+			+ list of followers | GET
+			+ list of followed | GET
+			+ 
+		- Write database schema (MongoDB)
+
+		- 
+
+		ask!!
+	- read/learn (node/exepress)
+		choose DB
+
+## Wrote specs of bootcamp
+
+
+------      ------      ------      ------      ------      ------     
+12/10/2018 (postpone next week)
+## TODO
+	- stats of twitter data, of developpers
+	- stats of facebook data, of developpers
+	- existing services, provided by companies 
+	- filter users according to location:
+		+get usernames/f?l/name from twitter/facebook () building a dictionary
+		+filter using location
+		+filter using language mistakes (identify native language using syntaxic/sementic mistakes) ?
+
+## Done
+	void

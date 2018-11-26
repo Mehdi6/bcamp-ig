@@ -1,0 +1,35 @@
+Specification and time estimation (14/11/2018)
+
+- Features (adapted)
+	title: developping a web platform, similar to instagram
+		(version 1)
+		- user create account
+		- user authenticate
+		- user add/remove post/comment
+		- user follow/unfollow other users
+		- posts, are content, media/pictures/videos/links/etc
+		- posts might have, comments, likes, and likes on comments
+		
+		(version 2)
+		- user like/unlike a post or comment
+		- user add / edit comment/commentonpost
+		- user add / eddit reply
+		- iterate/adapte/feedback
+
+		(version 3)
+		- iterate/adapte/feedback
+
+
+- Estimate time (three/five weeks)
+	-for 1st prototype (version alpha) week/10d | 28/11/2018
+	-for 2nd version (version alpha+) +week
+	-for 3rd (last version beta)	+week
+
+
+- Choice of tech
+	- Javascript (ReactJs), NodeJs, ExpressJs
+	- To spec ? DB(Mongo/Postgres/MySQL)
+		
+
+- Other specs:
+	- Responsiveness: plateform should adapt to phone
