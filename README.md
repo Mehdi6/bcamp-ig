@@ -8,7 +8,7 @@
 
 ## Database schema
 
-+User
+- User
 	- profile_username
 	- fullname
 	- password
@@ -22,94 +22,84 @@
 		-id
 	- created_at
 
-+Post
+- Post
 	- id
 	- content
 	- id_parent_post
 	- created_at
 
-+Reaction
+- Reaction
 	- post_id
 	- creation_date
 	- reaction (h/sa/sm/su/l)
 
 
 ## Rest API schema
-	+ follow | POST | input username output true/false
-	+ unfollow | POST | input username output true/false
-	+ create_account  | POST |
-		-form subscription: input: (form: fullname/ username/ age/ password/ etc ) / output: 
-		-form validate_email: input code_validation | output: true/false
-
-	+ authenticate | POST | input: (credentials: username/password)  / output:  true/false
-	+ share_a_post | POST | input descrption/link/text
-	+ list_of_followers | GET | input: username/id = output: list following
-	+ list_of_followed | GET | input: username | output: list followers
-	+ search_user | GET | input: username = output: list users
-	+ list_of_comments | GET | input: post_id | output: list of comments
-	+ my_profile | GET | input: | output: profile (fullname, pict, etc | posts )
-	+ list_posts | GET | input: | output: posts (of followers ranked by created_at)
-	+ react_to_post | POST | input: post_id reaction (...) | output: true/false
+* follow | POST | input username output true/false
+* unfollow | POST | input username output true/false
+* create_account  | POST |
+	* form subscription: input: (form: fullname/ username/ age/ password/ etc ) / output: 
+	* form validate_email: input code_validation | output: true/false
+	
+* authenticate | POST | input: (credentials: username/password)  / output:  true/false
+* share_a_post | POST | input descrption/link/text
+* list_of_followers | GET | input: username/id = output: list following
+* list_of_followed | GET | input: username | output: list followers
+* search_user | GET | input: username = output: list users
+* list_of_comments | GET | input: post_id | output: list of comments
+* my_profile | GET | input: | output: profile (fullname, pict, etc | posts )
+* list_posts | GET | input: | output: posts (of followers ranked by created_at)
+* react_to_post | POST | input: post_id reaction (...) | output: true/false
 
 
 ## Maquette
 
-i) Timeline
-	post1 (user_avat, reactions_count, content)
+1. Timeline
+	1. post1 (user_avat, reactions_count, content)
 		prev: comment
-
-	post2 (...)
-
-
-	post3 (...)
+	2. post2 (...)
+	3. post3 (...)
 
 
-ii) Profile
-	profile_picture(embeded:link)
+2. Profile
+	1. profile_picture(embeded:link)
+	2. bio
+	3. followers_count (embeded_link_to_followers_list)
+	4. following_count (embeded_link_to_following_list)
+	5. posts
+		1. post1 (user_avat, reactions_count, content)
+			prev: comment	
+		2. post2 (...)
+		3. post3 (...)
 
-	bio
+3) Add post
+	1. Form
+		1. content
+		2. title
+		3. link (media/picture/article)
+		4. upload (media/picture)
 
-	followers_count (embeded_link_to_followers_list)
-	following_count (embeded_link_to_following_list)
-
-	posts
-		post1 (user_avat, reactions_count, content)
-			prev: comment
-
-		post2 (...)
-
-		post3 (...)
-		
-		...
-
-
-iii) Add post
-	Form
-		+ content
-		+ title
-		+ link (media/picture/article)
-		+ upload (media/picture)
-
-	button (share)
+	2. button (share)
 	
-iv) Home (signup/signin)
+4. Home (signup/signin)
 
 	welcome --> Sign IN | Sign UP
 
-v)	Sign IN (Interface)
-	form:
-		- (username/email + password)
-		- (forgot pwd)
+5. Sign IN (Interface)
+form:
+	1.(username/email + password)
+	2.(forgot pwd)
 
-vi) Sign Up (Interface)
-	form
-		- fullname
-		- username
-		- pssword1/2
-		- etc
+6. Sign Up (Interface)
+form:
+	1. fullname
+	2. username
+	3. pssword1/2
+	4. etc
 
 ## Done
-###Rest API (BackEnd)
+
+### Rest API (BackEnd)
 - user create account
 - user authenticate
 
@@ -126,5 +116,5 @@ vi) Sign Up (Interface)
 
 ## Resources we got inspired from
 
-	(Learn how to handle authentication with Node using Passport.js)[https://medium.freecodecamp.org/learn-how-to-handle-authentication-with-node-using-passport-js-4a56ed18e81e]
+* [Learn how to handle authentication with Node using Passport.js](https://medium.freecodecamp.org/learn-how-to-handle-authentication-with-node-using-passport-js-4a56ed18e81e)
 	
