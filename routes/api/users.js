@@ -1,12 +1,15 @@
+
 const mongoose = require('mongoose');
-const passport = require('passport');
+require('../../models/Posts')
+require('../../models/Users')
+
 const router = require('express').Router();
-const auth = require('../auth');
 const Users = mongoose.model('Users');
+const auth = require('../auth');
+const errorHandler = require('errorhandler');
 
 //POST new user route (optional, everyone has access)
 router.post('/', auth.optional, (req, res, next) => {
-  console.log('tests');
   const user = { email: req.body.email, password: req.body.password };
 
   if(!user.email) {
@@ -25,9 +28,13 @@ router.post('/', auth.optional, (req, res, next) => {
     });
   }
 
+  // TODO: integrate other fields: fullname, username, etc
+
   const finalUser = new Users(user);
 
   finalUser.setPassword(user.password);
+
+  //  TODO: before saving, send validation email
 
   return finalUser.save()
     .then(() => res.json({ user: finalUser.toAuthJSON() }));
@@ -36,7 +43,7 @@ router.post('/', auth.optional, (req, res, next) => {
 //POST login route (optional, everyone has access)
 router.post('/login', auth.optional, (req, res, next) => {
   const { body: { user } } = req;
-
+  
   if(!user.email) {
     return res.status(422).json({
       errors: {
@@ -53,34 +60,35 @@ router.post('/login', auth.optional, (req, res, next) => {
     });
   }
 
-  return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
-    if(err) {
-      return next(err);
-    }
+  Users.findOne({'email': user.email }, "hash salt password", function(err, usr) {
+    if(err) console.log(errorHandler(err));
+    
+    if(usr)
+      if(user.password == usr.password) {
+        usr.token = usr.generateJWT();
 
-    if(passportUser) {
-      const user = passportUser;
-      user.token = passportUser.generateJWT();
-
-      return res.json({ user: user.toAuthJSON() });
-    }
-
-    return status(400).info;
-  })(req, res, next);
-});
-
-//GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, (req, res, next) => {
-  const { payload: { id } } = req;
-
-  return Users.findById(id)
-    .then((user) => {
-      if(!user) {
-        return res.sendStatus(400);
+        console.log('authenticate');
+        return res.json({ user: usr.toAuthJSON() });
       }
+      else
+        console.log("report unmatched password");
 
-      return res.json({ user: user.toAuthJSON() });
-    });
+    else
+      console.log("report unmatched email");
+
+  });
 });
 
+// TODO: implement Logout
+// router.post('/logout', auth.required, (req, res, next)) => {
+  
+// });
+
+
+// TODO: implement email validation
+
+
+// TODO: implement reset password
+  
+  
 module.exports = router;
