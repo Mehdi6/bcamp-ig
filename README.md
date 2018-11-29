@@ -24,7 +24,7 @@
 
 - Post
 	- id
-	- content
+	- description
 	- id_parent_post
 	- created_at
 
