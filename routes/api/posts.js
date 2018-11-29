@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 const router = require('express').Router();
 const auth = require('../auth');
+require('../../models/Comments');
+
 const Posts = mongoose.model('Posts');
 const Users = mongoose.model('Users');
+const Comments = mongoose.model('Comments');
+
 
 // TODO: check data validation 
 router.post('/add', auth.required, (req, res, next) => {
@@ -62,7 +66,43 @@ router.delete('/', auth.required, (req, res, next) => {
 });
 
 // TODO: implement add comment
+router.post('/comment', auth.required, (req, res, next) => {
+	const { body: { comment1 } } = req;
+	const { payload: { id } } = req;
+
+
+	Users.findById(id).then((user) => {
+		if(!user) {
+			return res.sendStatus(400);
+		}
+
+		// creating a new comment
+		var comment = new Comment(comment1);
+		comment.created_at = Date();
+		
+		comment.save().then(() => {
+			res.status(201).json({message: "comment successfully created"});
+			});
+		});
+});
 
 // TODO: implement remove comment
+router.delete('/comment', auth.required, (req, res, next) => {
+	const { body: { commentId } } = req;
+	const { payload: { id } } = req;
+
+	console.log(commentId);
+
+	Users.findById(id).then((user) => {
+		if(!user) {
+			return res.sendStatus(400);
+		}
+
+		commentObjectId = mongoose.Types.ObjectId(commentId.id);
+		Comments.deleteOne({'_id': commentObjectId}).then(() => {
+			res.status(201).json({message: "comment removed successfuly"});
+			});
+		});
+});
 
 module.exports = router;

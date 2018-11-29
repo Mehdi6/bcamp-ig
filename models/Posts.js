@@ -11,7 +11,8 @@ const PostsSchema = new Schema({
 			message: props => `${props.value} is not a valid url!`,
 			required: [true, 'A media attached to the Post is a required']
 		},
-		description: String
+		description: String,
+		created_at: Date
 	});
 
 function isUrlValid(urlToValidate) {

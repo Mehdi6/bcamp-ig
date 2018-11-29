@@ -1,7 +1,8 @@
 
 const mongoose = require('mongoose');
-require('../../models/Posts')
-require('../../models/Users')
+require('../../models/Posts');
+require('../../models/Users');
+require('../../models/Comments');
 
 const router = require('express').Router();
 const Users = mongoose.model('Users');
