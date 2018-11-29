@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 const router = require('express').Router();
 const auth = require('../auth');
 require('../../models/Comments');
+require('../../models/Reactions');
 
 const Posts = mongoose.model('Posts');
 const Users = mongoose.model('Users');
 const Comments = mongoose.model('Comments');
+const Reactions = mongoose.model('Reactions');
 
 
 // TODO: check data validation 
@@ -46,6 +48,7 @@ router.post('/add', auth.required, (req, res, next) => {
 	}); 
 });
 
+
 // TODO: Implement remove post
 router.delete('/', auth.required, (req, res, next) => {
 	const { body: { postId } } = req;
@@ -65,19 +68,28 @@ router.delete('/', auth.required, (req, res, next) => {
 		});
 });
 
-// TODO: implement add comment
+
 router.post('/comment', auth.required, (req, res, next) => {
 	const { body: { comment1 } } = req;
 	const { payload: { id } } = req;
 
+	console.log(comment1.content);
 
 	Users.findById(id).then((user) => {
 		if(!user) {
 			return res.sendStatus(400);
 		}
+		
+		if(!comment1.content) {
+			return res.status(422).json({
+			      errors: {
+			        content: 'is required',
+			      },
+		    	});
+		}
 
 		// creating a new comment
-		var comment = new Comment(comment1);
+		var comment = new Comments(comment1);
 		comment.created_at = Date();
 		
 		comment.save().then(() => {
@@ -86,7 +98,7 @@ router.post('/comment', auth.required, (req, res, next) => {
 		});
 });
 
-// TODO: implement remove comment
+
 router.delete('/comment', auth.required, (req, res, next) => {
 	const { body: { commentId } } = req;
 	const { payload: { id } } = req;
@@ -102,6 +114,79 @@ router.delete('/comment', auth.required, (req, res, next) => {
 		Comments.deleteOne({'_id': commentObjectId}).then(() => {
 			res.status(201).json({message: "comment removed successfuly"});
 			});
+		});
+});
+
+
+router.put('/comment', auth.required, (req, res, next) => {
+	//const comment = { id: mongoose.Types.ObjectId(req.body.id), content: req.body.content };
+	const { body: { comment } } = req;
+	const { payload: { id } } = req;
+
+	Users.findById(id).then((user) => {
+		if(!user) {
+			return res.sendStatus(400);
+		}
+
+		Comments.update({_id: comment.id}, {"content": comment.content}).then(() => {
+			return res.status(201).json({message: "comment updated successfuly"});
+			});
+		});
+	});
+
+
+router.post('/react', auth.required, (req, res, next) => {
+	const { body: { reaction }} = req;
+	const { payload: {id}} = req;
+
+	console.log(reaction);
+
+	Users.findById(id).then((user) => {
+		if(!user) {
+			res.sendStatus(400);
+		}
+
+		if(!reaction) {
+			return res.status(422).json({
+			      errors: {
+			        reaction: 'is required',
+			      },
+		    	});
+		}
+
+		if(!reaction.postId){
+			return res.status(422).json({
+			      errors: {
+			        postId: 'is required',
+			      },
+		    	});
+		}
+
+		if(!reaction.type) {
+			return res.status(422).json({
+			      errors: {
+			        type: 'is required',
+			      },
+		    	});
+		}
+
+		postId = mongoose.Types.ObjectId(reaction.postId);
+
+		Posts.findOne({"_id": postId}).then((post) => {
+			console.log(reaction.postId);
+			const reactionObject = new Reactions({
+				postId: mongoose.Types.ObjectId(reaction.postId),
+				type: reaction.type,
+				created_at: Date()
+			});
+			
+			post.reactions.push(reactionObject);
+			post.save().then(() => {
+				return res.status(200).json({"message": "reaction added successfully"});
+
+			})
+		});
+
 		});
 });
 

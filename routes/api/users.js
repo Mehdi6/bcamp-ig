@@ -91,5 +91,24 @@ router.post('/login', auth.optional, (req, res, next) => {
 
 // TODO: implement reset password
   
+router.post('/follow', auth.required, (req, res, next) => {
+  const { body: { userToFollow }} = req;
+  const { payload: { id } } = req;
+
+  Users.findById(id).then( (user) => {
+    if(!user) {
+      res.sendStatus(400);
+    }
+
+    user.following.push(userToFollow.userId);
+
+    user.save().then(() => {
+      return res.sendStatus(200).json({"message": "following user successfully!"});
+    })
+  })
+});
+
+// TODO: implement unfollow a user
+
   
 module.exports = router;

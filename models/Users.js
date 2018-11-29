@@ -15,7 +15,7 @@ const UsersSchema = new Schema({
   profile_picture: String,
   bio:String,
   link:String,
-  followers:Array,
+  followers: Array,
   following: Array,
   created_at: Date,
 });

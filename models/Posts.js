@@ -12,7 +12,8 @@ const PostsSchema = new Schema({
 			required: [true, 'A media attached to the Post is a required']
 		},
 		description: String,
-		created_at: Date
+		created_at: Date,
+		reactions: Array
 	});
 
 function isUrlValid(urlToValidate) {
