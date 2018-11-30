@@ -119,7 +119,6 @@ router.delete('/comment', auth.required, (req, res, next) => {
 
 
 router.put('/comment', auth.required, (req, res, next) => {
-	//const comment = { id: mongoose.Types.ObjectId(req.body.id), content: req.body.content };
 	const { body: { comment } } = req;
 	const { payload: { id } } = req;
 
@@ -135,11 +134,10 @@ router.put('/comment', auth.required, (req, res, next) => {
 	});
 
 
+// reactions: on posts
 router.post('/react', auth.required, (req, res, next) => {
 	const { body: { reaction }} = req;
 	const { payload: {id}} = req;
-
-	console.log(reaction);
 
 	Users.findById(id).then((user) => {
 		if(!user) {
@@ -173,9 +171,9 @@ router.post('/react', auth.required, (req, res, next) => {
 		postId = mongoose.Types.ObjectId(reaction.postId);
 
 		Posts.findOne({"_id": postId}).then((post) => {
-			console.log(reaction.postId);
 			const reactionObject = new Reactions({
 				postId: mongoose.Types.ObjectId(reaction.postId),
+				userId: user.id,
 				type: reaction.type,
 				created_at: Date()
 			});
@@ -189,5 +187,52 @@ router.post('/react', auth.required, (req, res, next) => {
 
 		});
 });
+
+// reactions: on comments
+router.post("/unreact", auth.required, (req, res, next) => {
+	const { body: { reaction }} = req;
+	const { payload: { id }} = req;
+
+	Users.findById(id).then((user) => {
+		if(!user) {
+			res.sendStatus(400);
+		}
+
+		if(!reaction) {
+			return res.status(422).json({
+			      errors: {
+			        reaction: 'is required',
+			      },
+		    	});
+		}
+
+		postId = mongoose.Types.ObjectId(reaction.postId);
+
+		Posts.findOne({"_id": postId}).then((post) => {
+			var reactionIndex = -1;
+
+			reactions = post.reactions;
+			for(i=0;i<reactions.length;i++){
+				if(reactions[i]._id == reaction.id){
+					reactionIndex = i;
+					break;
+				}
+			}
+
+			if(reactionIndex < 0) {
+				return res.status(400).json({"message": "The user reaction does not exist."});
+			}
+
+			reactions.splice(reactionIndex, 1);
+
+			post.save().then(() => {
+				return res.status(200).json({"message": "reaction removed successfully"});
+			});
+		});
+	});
+
+;})
+
+
 
 module.exports = router;

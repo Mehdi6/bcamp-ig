@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 Reactions = Schema({
 	postId: mongoose.Types.ObjectId,
+	userId: String,
 	type: String,
 	created_at: Date
 });
