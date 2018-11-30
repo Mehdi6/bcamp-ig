@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 require('../../models/Posts');
 require('../../models/Users');
@@ -86,11 +85,12 @@ router.post('/login', auth.optional, (req, res, next) => {
 // });
 
 
+
 // TODO: implement email validation
 
 
+
 // TODO: implement reset password
-  
 router.post('/follow', auth.required, (req, res, next) => {
   const { body: { userToFollow }} = req;
   const { payload: { id } } = req;
@@ -107,6 +107,7 @@ router.post('/follow', auth.required, (req, res, next) => {
     })
   })
 });
+
 
 router.post("/unfollow", auth.required, (req, res, next) => {
   const { body: { userToUnfollow }} = req;
@@ -140,6 +141,9 @@ router.post("/unfollow", auth.required, (req, res, next) => {
   });
 });
 
+// TODO: implement reaction to comment
 
+
+// TODO: implement unreact to comment
 
 module.exports = router;

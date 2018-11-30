@@ -11,8 +11,8 @@ const Reactions = mongoose.model('Reactions');
 
 
 // TODO: check data validation 
-router.post('/add', auth.required, (req, res, next) => {
-  const { body: { post1 } } = req;
+router.post('/', auth.required, (req, res, next) => {
+  const { body: { post } } = req;
   const { payload: { id } } = req;
 
   Users.findById(id).then( (user) => {
@@ -20,10 +20,8 @@ router.post('/add', auth.required, (req, res, next) => {
         return res.sendStatus(400);
       }
 
-      console.log(post1);
-
 	// form validation
-	if(!post1.media){
+	if(!post.media){
 		return res.status(422).json({
 	      errors: {
 	        media: 'is required',
@@ -31,7 +29,7 @@ router.post('/add', auth.required, (req, res, next) => {
 	    });
 	}
 
-	if(!post1.description){
+	if(!post.description){
 	    return res.status(422).json({
 	      errors: {
 	        content: 'is required',
@@ -40,10 +38,9 @@ router.post('/add', auth.required, (req, res, next) => {
 	}
 
 	// creating a new post
-	var post = new Posts(post1);
-	
-	post.save().then(() => {
-		res.status(201).json({message: "post successfully created"});
+	const pst = new Posts(post);
+	pst.save().then(() => {
+		res.status(201).json({message: "Post successfully created."});
 		});
 	}); 
 });
@@ -69,72 +66,7 @@ router.delete('/', auth.required, (req, res, next) => {
 });
 
 
-router.post('/comment', auth.required, (req, res, next) => {
-	const { body: { comment1 } } = req;
-	const { payload: { id } } = req;
-
-	console.log(comment1.content);
-
-	Users.findById(id).then((user) => {
-		if(!user) {
-			return res.sendStatus(400);
-		}
-		
-		if(!comment1.content) {
-			return res.status(422).json({
-			      errors: {
-			        content: 'is required',
-			      },
-		    	});
-		}
-
-		// creating a new comment
-		var comment = new Comments(comment1);
-		comment.created_at = Date();
-		
-		comment.save().then(() => {
-			res.status(201).json({message: "comment successfully created"});
-			});
-		});
-});
-
-
-router.delete('/comment', auth.required, (req, res, next) => {
-	const { body: { commentId } } = req;
-	const { payload: { id } } = req;
-
-	console.log(commentId);
-
-	Users.findById(id).then((user) => {
-		if(!user) {
-			return res.sendStatus(400);
-		}
-
-		commentObjectId = mongoose.Types.ObjectId(commentId.id);
-		Comments.deleteOne({'_id': commentObjectId}).then(() => {
-			res.status(201).json({message: "comment removed successfuly"});
-			});
-		});
-});
-
-
-router.put('/comment', auth.required, (req, res, next) => {
-	const { body: { comment } } = req;
-	const { payload: { id } } = req;
-
-	Users.findById(id).then((user) => {
-		if(!user) {
-			return res.sendStatus(400);
-		}
-
-		Comments.update({_id: comment.id}, {"content": comment.content}).then(() => {
-			return res.status(201).json({message: "comment updated successfuly"});
-			});
-		});
-	});
-
-
-// reactions: on posts
+// reactions: add reaction on posts
 router.post('/react', auth.required, (req, res, next) => {
 	const { body: { reaction }} = req;
 	const { payload: {id}} = req;
@@ -169,11 +101,10 @@ router.post('/react', auth.required, (req, res, next) => {
 		}
 
 		postId = mongoose.Types.ObjectId(reaction.postId);
-
 		Posts.findOne({"_id": postId}).then((post) => {
 			const reactionObject = new Reactions({
-				postId: mongoose.Types.ObjectId(reaction.postId),
-				userId: user.id,
+				post_id: mongoose.Types.ObjectId(reaction.postId),
+				user_id: user.id,
 				type: reaction.type,
 				created_at: Date()
 			});
@@ -188,9 +119,10 @@ router.post('/react', auth.required, (req, res, next) => {
 		});
 });
 
-// reactions: on comments
+
+// reactions: remove reaction on post 
 router.post("/unreact", auth.required, (req, res, next) => {
-	const { body: { reaction }} = req;
+	const { body: { postId }} = req;
 	const { payload: { id }} = req;
 
 	Users.findById(id).then((user) => {
@@ -198,22 +130,22 @@ router.post("/unreact", auth.required, (req, res, next) => {
 			res.sendStatus(400);
 		}
 
-		if(!reaction) {
+		if(!postId) {
 			return res.status(422).json({
 			      errors: {
-			        reaction: 'is required',
+			        postId: 'is required',
 			      },
 		    	});
 		}
 
-		postId = mongoose.Types.ObjectId(reaction.postId);
+		postId = mongoose.Types.ObjectId(postId.id);
 
 		Posts.findOne({"_id": postId}).then((post) => {
 			var reactionIndex = -1;
 
 			reactions = post.reactions;
 			for(i=0;i<reactions.length;i++){
-				if(reactions[i]._id == reaction.id){
+				if(reactions[i].postId == postId.id){
 					reactionIndex = i;
 					break;
 				}
