@@ -108,6 +108,21 @@ router.post('/react', auth.required, (req, res, next) => {
 				type: reaction.type,
 				created_at: Date()
 			});
+
+			var reactionIndex = -1;
+			reactions = post.reactions;
+
+			// check weather user already reacted to this post
+			for(i=0;i<reactions.length;i++) {
+				if(reactions[i].user_id == mongoose.Types.ObjectId(id)){
+					reactionIndex = i;
+					break;
+				}
+			}
+
+			if(reactionIndex >= 0){
+				return res.status(200).json({"message": "user already reacted to this post."});
+			}
 			
 			post.reactions.push(reactionObject);
 			post.save().then(() => {
@@ -138,14 +153,14 @@ router.post("/unreact", auth.required, (req, res, next) => {
 		    	});
 		}
 
-		postId = mongoose.Types.ObjectId(postId.id);
+		pstId = mongoose.Types.ObjectId(postId.id);
 
-		Posts.findOne({"_id": postId}).then((post) => {
+		Posts.findOne({"_id": pstId}).then((post) => {
 			var reactionIndex = -1;
 
 			reactions = post.reactions;
 			for(i=0;i<reactions.length;i++){
-				if(reactions[i].postId == postId.id){
+				if(reactions[i].user_id == id){
 					reactionIndex = i;
 					break;
 				}
