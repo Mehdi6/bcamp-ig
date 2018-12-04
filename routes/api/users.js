@@ -1,7 +1,7 @@
-
 const mongoose = require('mongoose');
-require('../../models/Posts')
-require('../../models/Users')
+require('../../models/Posts');
+require('../../models/Users');
+require('../../models/Comments');
 
 const router = require('express').Router();
 const Users = mongoose.model('Users');
@@ -85,10 +85,65 @@ router.post('/login', auth.optional, (req, res, next) => {
 // });
 
 
+
 // TODO: implement email validation
 
 
+
 // TODO: implement reset password
-  
-  
+router.post('/follow', auth.required, (req, res, next) => {
+  const { body: { userToFollow }} = req;
+  const { payload: { id } } = req;
+
+  Users.findById(id).then( (user) => {
+    if(!user) {
+      res.sendStatus(400);
+    }
+
+    user.following.push(userToFollow.userId);
+
+    user.save().then(() => {
+      return res.status(200).json({"message": "following user successfully!"});
+    })
+  })
+});
+
+
+router.post("/unfollow", auth.required, (req, res, next) => {
+  const { body: { userToUnfollow }} = req;
+  const { payload: { id }} = req;
+
+  Users.findById(id).then( (user) => {
+    if(!user) {
+      res.sendStatus(400);
+    }
+
+    if(!userToUnfollow){
+      return res.status(422).json({
+        errors: {
+          userToUnfollowId: 'is required',
+        },
+      });
+    }
+
+    indexOfUserToUnfollow = user.following.indexOf(userToUnfollow.id);
+
+    if( indexOfUserToUnfollow < 0){
+      res.status(400).json({
+        "message":"No user followed with the given id"
+      });
+    }
+
+    user.following.splice(indexOfUserToUnfollow);
+    user.save().then( () => {
+      return res.status(200).json({'message': "user successfully unfollowed"});
+    });
+  });
+});
+
+// TODO: implement reaction to comment
+
+
+// TODO: implement unreact to comment
+
 module.exports = router;
