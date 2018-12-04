@@ -11,7 +11,7 @@ const UsersSchema = new Schema({
   fullname: String,
   username: String,
   password: String,
-  age:Number,
+  bdate:Date,
   profile_picture: String,
   bio:String,
   link:String,
