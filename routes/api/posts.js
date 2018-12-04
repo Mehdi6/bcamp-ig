@@ -11,6 +11,8 @@ const Reactions = mongoose.model('Reactions');
 
 
 // TODO: check data validation 
+// TODO: Add length constraints to strings during validation
+
 router.post('/', auth.required, (req, res, next) => {
   const { body: { post } } = req;
   const { payload: { id } } = req;
@@ -29,12 +31,29 @@ router.post('/', auth.required, (req, res, next) => {
 	    });
 	}
 
+	// max: 1000 
 	if(!post.description){
 	    return res.status(422).json({
 	      errors: {
 	        content: 'is required',
 	      },
 	    });
+	} else {
+		// TODO: validation error status 
+		if(post.description.length > 1000)
+			return res.status(422).json({
+				errors: {
+					description: "description length exceeds 1000 chars.",
+				},
+			});
+
+		else if(post.description.length < 20){
+			return res.status(400).json({
+			errors: {
+				description: "description length is less than 60 chars.",
+			},
+		})
+		}
 	}
 
 	// creating a new post
@@ -42,7 +61,7 @@ router.post('/', auth.required, (req, res, next) => {
 	pst.save().then(() => {
 		res.status(201).json({message: "Post successfully created."});
 		});
-	}); 
+	});
 });
 
 
@@ -70,6 +89,7 @@ router.delete('/', auth.required, (req, res, next) => {
 router.post('/react', auth.required, (req, res, next) => {
 	const { body: { reaction }} = req;
 	const { payload: {id}} = req;
+	const listTypeReactions = ["like", "smile", "sad", "surprise"];
 
 	Users.findById(id).then((user) => {
 		if(!user) {
@@ -98,6 +118,10 @@ router.post('/react', auth.required, (req, res, next) => {
 			        type: 'is required',
 			      },
 		    	});
+		} else {
+			if(!listTypeReactions.includes(reaction.type)) {
+				return res.status
+			}
 		}
 
 		postId = mongoose.Types.ObjectId(reaction.postId);

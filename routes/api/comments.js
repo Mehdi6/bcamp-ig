@@ -16,6 +16,9 @@ router.post('/', auth.required, (req, res, next) => {
 	const { body: { comment } } = req;
 	const { payload: { id } } = req;
 
+	console.log(id);
+	console.log(req.body);
+
 	Users.findById(id).then((user) => {
 		if(!user) {
 			return res.sendStatus(400);
@@ -27,6 +30,23 @@ router.post('/', auth.required, (req, res, next) => {
 			        content: 'is required',
 			      },
 		    	});
+		}
+		else {
+		// TODO: validation error status 
+			if(comment.content.length > 500)
+				return res.status(422).json({
+					errors: {
+						content: "description length exceeds 500 chars.",
+					},
+				});
+
+			else if(comment.content.length < 20){
+				return res.status(400).json({
+				errors: {
+					content: "description length is less than 60 chars.",
+					},
+				})
+			}
 		}
 
 		if(!comment.postId) {
@@ -95,12 +115,36 @@ router.post("/reply", auth.required, (req, res, next) => {
     if(!user) {
       res.sendStatus(400);
     }
+
+    if(!reply) {
+      return res.status(400).json({
+      	errors:{
+      		reply: "is required!"
+      	},
+      });
+    }
     
     Comments.findById(reply.parentCommentId).then( (cmnt) => {
     	if(!cmnt){
-    		console.log(cmnt);
     		return res.status(400).json({parentCommentId:"required, to be valid."});
     	}
+    	else {
+			// TODO: validation error status 
+			if(reply.content.length > 500) {
+				return res.status(422).json({
+					errors: {
+						content: "description length exceeds 500 chars.",
+					},
+				});
+			}
+			else if(reply.content.length < 10) {
+				return res.status(400).json({
+				errors: {
+					content: "description length is less than 10 chars.",
+					},
+				});
+			}
+		}
 
 	    rply = Comments();
 	    rply.content = reply.content;
@@ -119,7 +163,7 @@ router.post("/reply", auth.required, (req, res, next) => {
 // reactions: add reaction on comments
 router.post('/react', auth.required, (req, res, next) => {
 	const { body: { reaction }} = req;
-	const { payload: {id}} = req;
+	const { payload: { id }} = req;
 
 	Users.findById(id).then((user) => {
 		if(!user) {
