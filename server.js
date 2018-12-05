@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 
 // extra modules to integrate subscription service
 const path = require('path');
-const session = require('express-session');
+//const session = require('express-session');
 const cors = require('cors');
 const errorHandler = require('errorhandler');
 const routes = require('./routes');
