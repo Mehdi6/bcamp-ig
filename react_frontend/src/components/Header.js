@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-//import CaptureUserLocation from "./services/CaptureUserLocation";
 import {Nav, Navbar, NavItem } from "react-bootstrap";
 
 class Header extends Component {
@@ -20,6 +19,9 @@ class Header extends Component {
                     </NavItem>
                     <NavItem key={2} componentClass={Link} href="/logout" to="/logout">
                         Logout
+                    </NavItem>
+                    <NavItem key={3} componentClass={Link} href="/timeline" to="/timeline">
+                        Timeline
                     </NavItem>
                 </Nav>
             );

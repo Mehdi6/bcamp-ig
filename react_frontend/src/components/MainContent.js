@@ -9,14 +9,13 @@ import Signup from "./auth/Signup";
 //import AccountActivation from "./auth/AccountActivation";
 import UserProfile from "./auth/UserProfile";
 import UserProfileEdit from "./auth/UserProfileEdit";
-import PasswordChange from "./auth/PasswordChange";
+// import PasswordChange from "./auth/PasswordChange";
 //import PasswordReset from "./auth/PasswordReset";
 //import PasswordResetDone from "./auth/PasswordResetDone";
 //import PasswordResetConfirm from "./auth/PasswordResetConfirm";
+// import Timeline from "./posts/Timeline";
 import NoMatch from "./NoMatch";
 
-//import NearbyShops from './services/NearbyShops'
-//import FavoriteShops from './services/FavoriteShops'
 
 const MainContent = () => (
     <div>
@@ -32,9 +31,8 @@ const MainContent = () => (
             <Route path="/reset/:token/" component={PasswordResetConfirm}/> */}
             <Route path="/profile" component={RequireAuth(UserProfile)}/>
             <Route path="/profile_edit" component={RequireAuth(UserProfileEdit)}/>
-            <Route path="/change_password" component={RequireAuth(PasswordChange)}/>
-            {/*<Route path="/shops/nearby" component={RequireAuth(NearbyShops, {isFavoriteList: false})} />
-            <Route path="/shops/favorite" component={RequireAuth(NearbyShops, {isFavoriteList: true})} /> */}
+            {/* <Route path="/change_password" component={RequireAuth(PasswordChange)}/> */}
+            <Route path="/timeline" component={RequireAuth(Timeline)} />
             <Route component={NoMatch}/>
         </Switch>
     </div>
