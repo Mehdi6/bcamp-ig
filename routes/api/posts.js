@@ -17,18 +17,20 @@ router.get('/list', auth.required, (req, res, next) => {
 		if(!user){
 			res.sendStatus(400);
 		}
-		// TODO: list of posts from all followers! build req
-		// Posts.findMany(, ).then( (posts) =>{
 
-		// });
-		// test data
-		pst = {
-			media: 'www.placeholdres.com/144',
-			description: 'test description, write a better test desc!',
-			created_at: new Date()
-		}
-		psts = [pst, pst];
-		return res.status(200).json({posts:psts});
+		Posts.find({'user_id': { '$in': user.following} }).then( (posts) => {
+			if(!posts) {
+				res.status(200).json({
+					'posts': []
+				});
+			}
+
+			return res.status(200).json({
+				posts: posts
+			});
+		});
+
+		// return res.status(200).json({posts:psts});
 	});
 });
 
@@ -100,6 +102,26 @@ router.post('/', auth.required, (req, res, next) => {
 			},
 		})
 		}
+	}
+
+	// user_id validation
+	if(!post.user_id){
+		res.status(422).json({
+			errors:{
+				user_id: "user_id attribute is mandatory, provide a value please."
+			},
+		});
+	}
+	else {
+		Users.findById(post.user_id).then((user) => {
+			if(!user){
+				res.status(422).json({
+					errors:{
+						user_id: "No active user account for the given user_id value. Provide a valid on please!"
+					},
+				});
+			}
+		});
 	}
 
 	// creating a new post

@@ -233,7 +233,7 @@ router.post('/follow', auth.required, (req, res, next) => {
     }
 
     // checking if an account associated to the user to follow does exist
-    Users.findById(userTofollow.userId).then( (usr) => {
+    Users.findById(userToFollow.userId).then( (usr) => {
       if(!usr) {
         return res.status(400).json({
           errors: {
