@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+require('../../models/Posts');
 require('../../models/Users');
+require('../../models/Comments');
 
 const router = require('express').Router();
 const Users = mongoose.model('Users');
@@ -9,9 +11,11 @@ const errorHandler = require('errorhandler');
 //POST new user route (optional, everyone has access)
 router.post('/signup', auth.optional, (req, res, next) => {
   const { body: { user} } = req;
+
   const passwordValidator = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})");
   const emailValidator = new RegExp(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
   // email validation
+
   if(!user.email) {
     return res.status(422).json({
       errors: {
