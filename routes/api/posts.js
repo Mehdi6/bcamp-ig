@@ -6,12 +6,58 @@ require('../../models/Reactions');
 
 const Posts = mongoose.model('Posts');
 const Users = mongoose.model('Users');
-const Comments = mongoose.model('Comments');
 const Reactions = mongoose.model('Reactions');
-
 
 // TODO: check data validation 
 // TODO: Add length constraints to strings during validation
+
+router.get('/list', auth.required, (req, res, next) => {
+	const {payload: {id}} = req;
+	Users.findById(id).then((user) => {
+		if(!user){
+			res.sendStatus(400);
+		}
+		// TODO: list of posts from all followers! build req
+		// Posts.findMany(, ).then( (posts) =>{
+
+		// });
+		// test data
+		pst = {
+			media: 'www.placeholdres.com/144',
+			description: 'test description, write a better test desc!',
+			created_at: new Date()
+		}
+		psts = [pst, pst];
+		return res.status(200).json({posts:psts});
+	});
+});
+
+// choice of priate/public posts
+// TODO: correct the endpoint.
+router.get('/:post_id([a-f0-9]{24})', auth.required, (req, res, next) => {
+	const { payload: { id }} = req;
+	const post_id = req.param('post_id'); 
+	
+	Users.findById(id).then( (user) => {
+		if(!user) {
+			res.sendStatus(422);
+		}
+
+		Posts.findById(post_id).then( (post) => {
+			if(!post) {
+				return res.status(422).json({
+					errors: {
+						post_id: "post id does not match any post."
+					},
+				});
+			}
+
+			return res.status(200).json({
+				data: post
+			});
+		});
+	});
+});
 
 router.post('/', auth.required, (req, res, next) => {
   const { body: { post } } = req;

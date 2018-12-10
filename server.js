@@ -19,7 +19,7 @@ var mongoose   = require('mongoose');
 const isProduction = process.env.NODE_ENV === 'production';
 
 //Configure mongoose's promise to global promise
-mongoose.Promise = bbird;	
+mongoose.Promise = bbird; 
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
