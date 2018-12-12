@@ -246,10 +246,13 @@ router.post("/unreact", auth.required, (req, res, next) => {
 		}
 		
 		pstId = mongoose.Types.ObjectId(postId.id);
+		console.log(pstId);
+		console.log(id);
 
-		Posts.findOne({"_id": pstId}).then((post) => {
+		Posts.findOne({ "_id": pstId }).then((post) => {
 			var reactionIndex = -1;
-			if(!post) {
+
+			if(post) {
 				if('reactions' in post) {
 					reactions = post.reactions;
 					for(i=0;i<reactions.length;i++){
