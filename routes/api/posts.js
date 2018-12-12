@@ -244,29 +244,32 @@ router.post("/unreact", auth.required, (req, res, next) => {
 			      },
 		    	});
 		}
-
+		
 		pstId = mongoose.Types.ObjectId(postId.id);
 
 		Posts.findOne({"_id": pstId}).then((post) => {
 			var reactionIndex = -1;
+			if(!post) {
+				if('reactions' in post) {
+					reactions = post.reactions;
+					for(i=0;i<reactions.length;i++){
+						if(reactions[i].user_id == id){
+							reactionIndex = i;
+							break;
+						}
+					}
 
-			reactions = post.reactions;
-			for(i=0;i<reactions.length;i++){
-				if(reactions[i].user_id == id){
-					reactionIndex = i;
-					break;
+					if(reactionIndex < 0) {
+						return res.status(400).json({"message": "The user reaction does not exist."});
+					}
+
+					reactions.splice(reactionIndex, 1);
+
+					post.save().then(() => {
+						return res.status(200).json({"message": "reaction removed successfully"});
+					});
 				}
 			}
-
-			if(reactionIndex < 0) {
-				return res.status(400).json({"message": "The user reaction does not exist."});
-			}
-
-			reactions.splice(reactionIndex, 1);
-
-			post.save().then(() => {
-				return res.status(200).json({"message": "reaction removed successfully"});
-			});
 		});
 	});
 
