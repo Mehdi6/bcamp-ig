@@ -19,9 +19,11 @@ export function postReducer(state = {}, action) {
         case PostTypes.DISLIKED:
             return { ...state, disliked: action.payload };
         case PostTypes.REMOVED:
-            return { ...state, post: action.payload };
+            return { ...state, result: action.payload };
         case PostTypes.EDITED:
             return { ...state, post: action.payload };
+        case PostTypes.POSTS:
+            return { ...state, posts: action.payload };
     }
     return state;
 }
@@ -33,9 +35,11 @@ export function commentReducer(state = {}, action) {
         case CommentTypes.DISLIKED:
             return { ...state, disliked: action.payload };
         case CommentTypes.REMOVED:
-            return { ...state, post: action.payload };
+            return { ...state, result: action.payload };
         case CommentTypes.EDITED:
-            return { ...state, post: action.payload };
+            return { ...state, comment: action.payload };
+        case CommentTypes.COMMENTS:
+            return { ...state, comments: action.payload };
      }
      return state;
 }

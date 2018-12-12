@@ -30,6 +30,7 @@ class PostCard extends Component {
     
     componentWillReceiveProps(nextProps)
     {
+        // console.log('test');
         if(this.props.value.id==nextProps.liked)
             this.setState({disableLikeButton:true});
         
@@ -46,14 +47,15 @@ class PostCard extends Component {
     render()
     {
         const post = this.props.value;
+        console.log(post.media);    
         return (
             <div style={this.state.removeCard}>
                 <Thumbnail src={post.media} alt="Post content">
                     <h4 >Description: {post.description}</h4>
                     {" "}
                     <hr />
-                    <Button bsStyle="danger" onClick={() => this.dislikeFunc(post.id)}>Dislike</Button>
-                    {this.renderLikeButton(post.id)}
+                    <Button bsStyle="danger" onClick={() => this.dislikeFunc(post._id)}>Dislike</Button>
+                    {this.renderLikeButton(post._id)}
                 </Thumbnail>
             </div>
         );

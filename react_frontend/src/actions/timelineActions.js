@@ -1,31 +1,31 @@
 import axios from "axios";
 
 import { PostUrls } from "../constants/urls";
+import { PostTypes } from "../constants/actionTypes";
 import store from "../store";
 import { getUserToken } from "../utils/authUtils";
 
 
-function setPost(payload) {
+export function setPost(payload) {
     return {
         type: PostTypes.POSTS,
         payload: payload
     };
 }
 
-export function getPosts(page) {
+export function getPosts() {
     return function(dispatch) {
-        let url = url = PostUrls.GET_POSTS;
+        let url = PostUrls.GET_POSTS;
         
         const token = getUserToken(store.getState());
+        
         if (token) {
             axios.get(url, {
                 headers: {
                     authorization: 'Token ' + token
-                },
-                params: {...store.getState().service.userLocation, 
-                page: page}
+                }
             }).then(response => {
-                dispatch(setPost(response.data))
+                dispatch(setPost(response.data));
             }).catch((error) => {
                 // If request is bad...
                 // Show an error to the user
@@ -36,9 +36,9 @@ export function getPosts(page) {
     };
 }
 
-function setLiked(payload) {
+export function setLiked(payload) {
     return {
-        type: PostTypes.POST_LIKED,
+        type: PostTypes.LIKED,
         payload: payload
     };
 }
@@ -48,14 +48,12 @@ export function likePost(post_id) {
         const token = getUserToken(store.getState());
         if (token) {
             let url = PostUrls.LIKE_POST;
-            axios.post(url, { id: post_id }, {
+            axios.post(url, {reaction : { postId: post_id, type: 'like' }}, {
                 headers: {
                     authorization: 'Token ' + token
                 }
             }).then(response => {
-                dispatch(setLiked(post_id));
-                //console.log(response.data);
-                
+                dispatch(setLiked(post_id));                
             }).catch((error) => {
                 // If request is bad...
                 // Show an error to the user
@@ -67,9 +65,9 @@ export function likePost(post_id) {
     };
 }
 
-function setDisliked(payload) {
+export function setDisliked(payload) {
     return {
-        type: PostTypes.POST_DISLIKED,
+        type: PostTypes.DISLIKED,
         payload: payload
     };
 }
@@ -88,7 +86,7 @@ export function dislikePost(post_id) {
                     headers: {
                         authorization: 'Token ' + token
                     },
-                    data:{ id: post_id }
+                    data:{ postId: post_id }
             }).then(response => {
                 dispatch(setDisliked(post_id));
                 //console.log(response.data);

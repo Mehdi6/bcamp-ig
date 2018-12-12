@@ -37,26 +37,26 @@ export function loginUser(formValues, dispatch) {
         });
 }
 
-export function logoutUser(dispatch) {
-    localStorage.removeItem("token");
-    const logoutUrl = AuthUrls.LOGOUT;
-    const token = getUserToken(store.getState());
-    axios.get(logoutUrl, {
-                headers: {
-                    authorization: 'Token ' + token
-                }
-            }).then((response) => {
+// export function logoutUser(dispatch) {
+//     localStorage.removeItem("token");
+//     const logoutUrl = AuthUrls.LOGOUT;
+//     const token = getUserToken(store.getState());
+//     axios.get(logoutUrl, {
+//                 headers: {
+//                     authorization: 'Token ' + token
+//                 }
+//             }).then((response) => {
         
-     console.log("logout successfully.");
-    }).catch( error => {
-        // print something about logout fail ...
-        console.log("logout failed.");
-    });
+//      console.log("logout successfully.");
+//     }).catch( error => {
+//         // print something about logout fail ...
+//         console.log("logout failed.");
+//     });
     
-    return ({
-            type: AuthTypes.LOGOUT
-            });
-}
+//     return ({
+//             type: AuthTypes.LOGOUT
+//             });
+// }
 
 export function signupUser(formValues, dispatch) {
     const signupUrl = AuthUrls.SIGNUP;
@@ -82,7 +82,7 @@ export function signupUser(formValues, dispatch) {
         });
 }
 
-function setUserProfile(payload) {
+export function setUserProfile(payload) {
     return {
         type: AuthTypes.USER_PROFILE,
         payload: payload
@@ -109,120 +109,120 @@ export function getUserProfile() {
     };
 }
 
-export function changePassword(formValues, dispatch) {
-    const changePasswordUrl = AuthUrls.CHANGE_PASSWORD;
-    const token = getUserToken(store.getState());
+// export function changePassword(formValues, dispatch) {
+//     const changePasswordUrl = AuthUrls.CHANGE_PASSWORD;
+//     const token = getUserToken(store.getState());
 
-    if (token) {
-        return axios.post(changePasswordUrl, formValues, {
-            headers: {
-                authorization: 'Token ' + token
-            }
-        })
-            .then(() => {
-                dispatch(notifSend({
-                    message: "Password has been changed successfully",
-                    kind: "info",
-                    dismissAfter: 5000
-                }));
-                // redirect to the route '/profile'
-                history.push("/profile");
-            })
-            .catch((error) => {
-                // If request is bad...
-                // Show an error to the user
-                const processedError = processServerError(error.response.data);
-                throw new SubmissionError(processedError);
-            });
-    }
-}
+//     if (token) {
+//         return axios.post(changePasswordUrl, formValues, {
+//             headers: {
+//                 authorization: 'Token ' + token
+//             }
+//         })
+//             .then(() => {
+//                 dispatch(notifSend({
+//                     message: "Password has been changed successfully",
+//                     kind: "info",
+//                     dismissAfter: 5000
+//                 }));
+//                 // redirect to the route '/profile'
+//                 history.push("/profile");
+//             })
+//             .catch((error) => {
+//                 // If request is bad...
+//                 // Show an error to the user
+//                 const processedError = processServerError(error.response.data);
+//                 throw new SubmissionError(processedError);
+//             });
+//     }
+// }
 
-export function resetPassword(formValues, dispatch) {
-    const resetPasswordUrl = AuthUrls.RESET_PASSWORD;
+// export function resetPassword(formValues, dispatch) {
+//     const resetPasswordUrl = AuthUrls.RESET_PASSWORD;
 
-    return axios.post(resetPasswordUrl, formValues)
-        .then(response => {
-            // redirect to reset done page
-            history.push("/reset_password_done");
-        }).catch((error) => {
-            // If request is bad...
-            // Show an error to the user
-            const processedError = processServerError(error.response.data);
-            throw new SubmissionError(processedError);
-        });
-}
+//     return axios.post(resetPasswordUrl, formValues)
+//         .then(response => {
+//             // redirect to reset done page
+//             history.push("/reset_password_done");
+//         }).catch((error) => {
+//             // If request is bad...
+//             // Show an error to the user
+//             const processedError = processServerError(error.response.data);
+//             throw new SubmissionError(processedError);
+//         });
+// }
 
-export function confirmPasswordChange(formValues, dispatch, props) {
-    const { token } = props.match.params;
-    const resetPasswordConfirmUrl = AuthUrls.RESET_PASSWORD_CONFIRM;
-    const data = Object.assign(formValues, { token });
+// export function confirmPasswordChange(formValues, dispatch, props) {
+//     const { token } = props.match.params;
+//     const resetPasswordConfirmUrl = AuthUrls.RESET_PASSWORD_CONFIRM;
+//     const data = Object.assign(formValues, { token });
 
-    return axios.post(resetPasswordConfirmUrl, data)
-        .then(() => {
-            dispatch(notifSend({
-                message: "Password has been reset successfully, please log in",
-                kind: "info",
-                dismissAfter: 5000
-            }));
+//     return axios.post(resetPasswordConfirmUrl, data)
+//         .then(() => {
+//             dispatch(notifSend({
+//                 message: "Password has been reset successfully, please log in",
+//                 kind: "info",
+//                 dismissAfter: 5000
+//             }));
 
-            history.push("/login");
-        }).catch((error) => {
-            // If request is bad...
-            // Show an error to the user
-            const processedError = processServerError(error.response.data);
-            throw new SubmissionError(processedError);
-        });
-}
+//             history.push("/login");
+//         }).catch((error) => {
+//             // If request is bad...
+//             // Show an error to the user
+//             const processedError = processServerError(error.response.data);
+//             throw new SubmissionError(processedError);
+//         });
+// }
 
-export function activateUserAccount(formValues, dispatch, props) {
-    const { key } = props.match.params;
-    const activateUserUrl = AuthUrls.USER_ACTIVATION;
-    const data = Object.assign(formValues, { key });
+// export function activateUserAccount(formValues, dispatch, props) {
+//     const { key } = props.match.params;
+//     const activateUserUrl = AuthUrls.USER_ACTIVATION;
+//     const data = Object.assign(formValues, { key });
 
-    return axios.get(activateUserUrl, {
-                params:{
-                token: data["key"]
-                }
-        }).then(() => {
-            dispatch(notifSend({
-                message: "Your account has been activated successfully, please log in",
-                kind: "info",
-                dismissAfter: 5000
-            }));
+//     return axios.get(activateUserUrl, {
+//                 params:{
+//                 token: data["key"]
+//                 }
+//         }).then(() => {
+//             dispatch(notifSend({
+//                 message: "Your account has been activated successfully, please log in",
+//                 kind: "info",
+//                 dismissAfter: 5000
+//             }));
 
-            history.push("/login");
-        }).catch((error) => {
-            // If request is bad...
-            // Show an error to the user
-            const processedError = processServerError(error.response.data);
-            throw new SubmissionError(processedError);
-        });
-}
+//             history.push("/login");
+//         }).catch((error) => {
+//             // If request is bad...
+//             // Show an error to the user
+//             const processedError = processServerError(error.response.data);
+//             throw new SubmissionError(processedError);
+//         });
+// }
 
-export function updateUserProfile(formValues, dispatch) {
-    const token = getUserToken(store.getState());
-    //console.log("balbla")
-    //console.log(token)
-    return axios.patch(AuthUrls.USER_PROFILE, formValues, {
-        headers: {
-            authorization: 'Token ' + token
-        }
-    })
-        .then(() => {
-            dispatch(notifSend({
-                message: "Your profile has been updated successfully",
-                kind: "info",
-                dismissAfter: 5000
-            }));
+// export function updateUserProfile(formValues, dispatch) {
+//     const token = getUserToken(store.getState());
+//     //console.log("balbla")
+//     //console.log(token)
+//     return axios.patch(AuthUrls.USER_PROFILE, formValues, {
+//         headers: {
+//             authorization: 'Token ' + token
+//         }
+//     })
+//         .then(() => {
+//             dispatch(notifSend({
+//                 message: "Your profile has been updated successfully",
+//                 kind: "info",
+//                 dismissAfter: 5000
+//             }));
 
-            history.push("/profile");
-        }).catch((error) => {
-            // If request is bad...
-            // Show an error to the user
-            const processedError = processServerError(error.response.data);
-            throw new SubmissionError(processedError);
-        });
-}
+//             history.push("/profile");
+//         }).catch((error) => {
+//             // If request is bad...
+//             // Show an error to the user
+//             const processedError = processServerError(error.response.data);
+//             throw new SubmissionError(processedError);
+//         });
+// }
 // util functions
 function processServerError(error) {
     return  Object.keys(error).reduce(function(newDict, key) {

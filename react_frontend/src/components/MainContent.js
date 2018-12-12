@@ -13,7 +13,7 @@ import UserProfileEdit from "./auth/UserProfileEdit";
 //import PasswordReset from "./auth/PasswordReset";
 //import PasswordResetDone from "./auth/PasswordResetDone";
 //import PasswordResetConfirm from "./auth/PasswordResetConfirm";
-// import Timeline from "./posts/Timeline";
+import Timeline from "./posts/Timeline";
 import NoMatch from "./NoMatch";
 
 

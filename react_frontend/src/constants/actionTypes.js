@@ -9,12 +9,14 @@ export const PostTypes = {
     LIKED: "LIKED",
     DISLIKED: "DISLIKED",
     REMOVED: "REMOVED",
-    EDITED: "EDITED"
+    EDITED: "EDITED",
+    POSTS: "POSTS"
 };
 
 export const CommentTypes = {
     LIKED: "LIKED",
     DISLIKED: "DISLIKED",
     REMOVED: "REMOVED",
-    EDITED: "EDITED"
+    EDITED: "EDITED",
+    COMMENTS: "COMMENTS"
 };

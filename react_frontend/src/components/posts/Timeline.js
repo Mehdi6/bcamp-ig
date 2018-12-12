@@ -7,7 +7,7 @@ import {Pager, Grid, Row, Col } from "react-bootstrap";
 
 class Timeline extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state={
             dislikeThisPost: Array(1).fill(true),
@@ -21,44 +21,40 @@ class Timeline extends Component {
     };
 
     componentWillMount() {
-        this.props.getPosts(this.state.pageNumber);
+        this.props.getPosts();
     }
     
     // componentWillReceiveProps(nextProps){
+    //     // console.log(nextProps);
     //     // the first time receiving props
-    //     if(!this.props.userLocation && nextProps.userLocation)
-    //         this.props.getPosts(this.state.pageNumber)
-        
-    //     if (nextProps.userLocation && this.props.userLocation
-    //     && nextProps.userLocation.lat !== this.props.userLocation.lat 
-    //     && nextProps.userLocation.lng !== this.props.userLocation.lng) 
-    //     {
-    //         this.props.getPosts(this.state.pageNumber)
-    //     }
+    //     if(nextProps.)
+    //         this.props.getPosts();
     // }
     
-    componentDidUpdate() {
-      //ReactDOM.findDOMNode(this).scrollTop = 0;
-      window.scrollTo(0, 0);
-    }
+    // componentDidUpdate() {
+    //   //ReactDOM.findDOMNode(this).scrollTop = 0;
+    //   window.scrollTo(0, 0);
+    // }
     
-    handlePrevious(){
-        const minusOne = this.state.pageNumber - 1;
-        this.setState({pageNumber: minusOne});
-        this.props.getPosts(minusOne);
-    }
+    // handlePrevious(){
+    //     const minusOne = this.state.pageNumber - 1;
+    //     this.setState({pageNumber: minusOne});
+    //     this.props.getPosts(minusOne);
+    // }
     
-    handleNext(){
-        const plusOne = this.state.pageNumber + 1
-        this.setState({pageNumber: plusOne});
-        this.props.getPosts(plusOne)
-    }
+    // handleNext(){
+    //     const plusOne = this.state.pageNumber + 1
+    //     this.setState({pageNumber: plusOne});
+    //     this.props.getPosts(plusOne);
+    // }
     
     renderPosts() {
         const posts = this.props.posts;
+
         const numberItemsByRow = 4; // 2, 3, 4, 6
         if (posts) {
-            const listItems = posts.results.map( (post) => <PostCard key={post.id} value={post} /> )
+            let psts = posts.posts;
+            const listItems = psts.map( (post) => <PostCard key={post.id} value={post} /> )
             
             let newList = []
             
@@ -84,19 +80,23 @@ class Timeline extends Component {
             
             return newList;
         }
-        
+
         return null;
     }
-    
+
     renderPagination(){
         let pages = [];
-        
+        let page = {
+            next: true,
+            previous: true,
+            pageNumber: 3
+        }
         if (this.props.posts){
-            if( this.props.posts.previous){
+            if( page.previous){
                 pages.push(<Pager.Item key={1} previous onClick={()=> this.handlePrevious()}>&larr; Previous</Pager.Item>);
             }
-            pages.push(<span key={2}> {this.state.pageNumber} </span>)
-            if( this.props.posts.next){
+            pages.push(<span key={2}> {page.pageNumber} </span>)
+            if( page.next){
                 pages.push(<Pager.Item key={3} next onClick={()=> this.handleNext()}>Next &rarr;</Pager.Item>)
             }
         }
@@ -111,16 +111,16 @@ class Timeline extends Component {
             </Grid>,
             <div key={2}>
             {this.renderPagination()}
-            </div>]
+            </div>
+            ]
         );
     }
 }
 
-function mapStateToProps(state) {
-    
+function mapStateToProps(state) {    
     return {
-        posts: state.post.posts,
-    };
+        posts: state.post.posts
+    }
 }
 
 export default connect(mapStateToProps, { getPosts } )(Timeline);

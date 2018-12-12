@@ -20,6 +20,7 @@ export const PostUrls = {
 
 export const CommentUrls = {
     CRUD_COMMENT: `${ROOT_URL}comments/`,
+    COMMENTS: `${ROOT_URL}comments/list`,
     LIKE_COMMENT: `${ROOT_URL}comments/react`,
     DISLIKE_COMMENT: `${ROOT_URL}comments/unreact`,
 }
