@@ -61,6 +61,7 @@ router.get('/:post_id([a-f0-9]{24})', auth.required, (req, res, next) => {
 	});
 });
 
+// create new post
 router.post('/', auth.required, (req, res, next) => {
   const { body: { post } } = req;
   const { payload: { id } } = req;
@@ -79,14 +80,32 @@ router.post('/', auth.required, (req, res, next) => {
 	    });
 	}
 
-	// max: 1000 
-	if(!post.description){
+	// max: 180 
+	if(!post.title){
 	    return res.status(422).json({
 	      errors: {
-	        content: 'is required',
+	        title: 'is required',
 	      },
 	    });
 	} else {
+		if(post.title.length > 180)
+			return res.status(422).json({
+				errors: {
+					description: "title length exceeds 180 chars.",
+				},
+			});
+
+		else if(post.title.length < 5){
+			return res.status(400).json({
+			errors: {
+				description: "title length is less than 60 chars.",
+			},
+		})
+		}
+	}
+
+	// max: 1000 
+	if('description' in post){
 		// TODO: validation error status 
 		if(post.description.length > 1000)
 			return res.status(422).json({
@@ -126,6 +145,10 @@ router.post('/', auth.required, (req, res, next) => {
 
 	// creating a new post
 	const pst = new Posts(post);
+	
+	pst.created_at = new Date();
+	pst.reactions = [];
+
 	pst.save().then(() => {
 		res.status(201).json({message: "Post successfully created."});
 		});
@@ -146,7 +169,6 @@ router.delete('/', auth.required, (req, res, next) => {
 
 		Posts.deleteOne({ "_id": postObjectId}).then(() => {
 				// message of successfull deletion
-				console.log("deleting the post");
 				return res.status(200).json({'message': "post successfully deleted!"});
 			});
 		});
@@ -244,10 +266,8 @@ router.post("/unreact", auth.required, (req, res, next) => {
 			      },
 		    	});
 		}
-		
+
 		pstId = mongoose.Types.ObjectId(postId.id);
-		console.log(pstId);
-		console.log(id);
 
 		Posts.findOne({ "_id": pstId }).then((post) => {
 			var reactionIndex = -1;
